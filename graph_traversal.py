@@ -31,14 +31,34 @@ def bfs(graph, start, target):
         graph = {0: [1, 2], 1: [0, 3], 2: [0], 3: [1]}
         bfs(graph, 0, 3) returns [0, 1, 3]
     """
-    # TODO: Implement BFS
-    # Hints:
-    # - Use a queue (deque) to track nodes to visit
-    # - Track visited nodes to avoid cycles
-    # - Track parent pointers to reconstruct path
-    # - Return path from start to target as a list
-    
-    pass
+    if start not in graph or target not in graph:
+        return []
+    if start == target:
+        return [start]
+
+    queue = deque([start])
+    visited = {start}
+    parent = {start: None}
+
+    while queue:
+        current = queue.popleft()
+        for neighbor in graph.get(current, []):
+            if neighbor in visited:
+                continue
+            visited.add(neighbor)
+            parent[neighbor] = current
+
+            if neighbor == target:
+                path = []
+                node = target
+                while node is not None:
+                    path.append(node)
+                    node = parent[node]
+                return path[::-1]
+
+            queue.append(neighbor)
+
+    return []
 
 
 # ============================================================================
@@ -60,13 +80,23 @@ def dfs(graph, start):
         graph = {0: [1, 2], 1: [0, 3], 2: [0], 3: [1], 4: [5], 5: [4]}
         dfs(graph, 0) returns {0, 1, 2, 3}
     """
-    # TODO: Implement DFS
-    # Hints:
-    # - Use recursion or a stack to explore deeply
-    # - Track visited nodes to avoid infinite loops
-    # - Return a set of all reachable user IDs
-    
-    pass
+    if start not in graph:
+        return set()
+
+    visited = set()
+    stack = [start]
+
+    while stack:
+        current = stack.pop()
+        if current in visited:
+            continue
+        visited.add(current)
+        # Reversed insertion preserves the adjacency-list order during traversal.
+        for neighbor in reversed(graph.get(current, [])):
+            if neighbor not in visited:
+                stack.append(neighbor)
+
+    return visited
 
 
 # ============================================================================
